@@ -48,11 +48,14 @@ wire s,c;
 
 half_adder half_adder_tb(a,b,s,c);
 
-initial
+initial // there can be any no of initial blocks in a tb. these are non sysnthesizeable. all initial blocks are run in parallel and begin at time 0
 begin 
   {a,b}=0;
+  #10
   {a,b}=1;
+  #10
   {a,b}=2;
+  #10
   {a,b}=3;
 end 
 
