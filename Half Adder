@@ -4,7 +4,7 @@ module half_adder(a,b,s,c);
   input a,b;  // by default wire
   output reg s,c;
   
-  always@(a or b)
+  always@(a or b) // i.e. this block is executed when a or b change
   begin
     if (a==0 && b==0)  // we can also write - if({a,b}==0)
       begin 
