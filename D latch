@@ -1,49 +1,67 @@
 ////////////////////////////////////////////////////////////////////////DUT/////////////////////////////////////////////////////////////////////////////////////////
 
-module d_latch(d,en,q,qbar);
-  input d,en,clk;
-  output reg q,qbar;
+// Code your design here
+module d_latch(input d,
+              input clk, 
+              input rst,
+              output reg q,
+              output reg q_b);
   
-  always@(d or en)
-    begin
-      assign q = (en==1)?(d):(0);
-      assign qbar=~q;
+  always @(*)
+    begin 
+      if (!rst) 
+        begin
+          q = 0;
+          q_b = 1;
+        end
+      
+      if (clk & rst)
+        begin 
+          q = d;
+          q_b = ~d;
+        end
     end
-     
+  
 endmodule
 
 /////////////////////////////////////////////////////////////////////Test Bench////////////////////////////////////////////////////////////////////////////////////////
 
-module d_latch_tb;
+// Code your testbench here
+// or browse Examples
+`timescale 1ns/1ps
 
-reg d,en;
-wire q,qbar;
-
-  d_latch d_latch_tb(d,en,q,qbar);
-
-initial
-begin 
-  //clk=1'b1;
-  en=1'b1;
-  d=1'b1;
-  #2 d=1'b0;
-  #10 d=1'b1;
-  #10 en=1'b0;
-  //d=1'b0;
-end 
+module d_latch_tb();
   
-  //always #5 clk=~clk;
+  reg d, rst, clk;
+  wire q, q_b;
   
-  initial begin
-    #50 $finish;
+  d_latch d_latch_first(d, clk, rst, q, q_b);
+  
+  initial 
+    begin 
+      d = 0;
+      rst = 0;
+      clk = 0;
   end 
-
-initial
-begin
-  $dumpfile("d_ff.vcd");
-  $dumpvars(0,d,en,q,qbar);
-end
-
+  
+  always #10 clk = ~clk;
+  always #7 d = ~d;
+  always #13 rst = ~rst;
+    
+  
+  initial 
+    begin 
+      #50 $finish;
+    end
+  
+  initial
+    begin
+       $dumpfile("d_latch.vcd");
+      $dumpvars(0, d_latch_tb);
+    end
+  
 endmodule
+  
+ 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
